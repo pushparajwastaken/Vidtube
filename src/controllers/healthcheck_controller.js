@@ -6,8 +6,6 @@ import { asynchandler } from "../utils/asynchandler.js";
 
 //CREATING A HEALTH CHECK
 
-
-
 //the main use of async handler is to wrap everything in a promise so we can handle errors in a beterr way
 
 const healthcheck = asynchandler(async (req, res) => {

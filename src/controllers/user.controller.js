@@ -445,10 +445,16 @@ const getwatchhistory = asynchandler(async (req, res) => {
       )
     );
 });
-export { registeruser, loginuser, refreshaccesstoken, logoutuser,changecurrentpassword,
+export {
+  registeruser,
+  loginuser,
+  refreshaccesstoken,
+  logoutuser,
+  changecurrentpassword,
   getcurrentuser,
   getuserchannelprofile,
   updateaccountdetails,
   updateuseravatar,
-  updautecoverimage,
-  getwatchhistory, };
+  updausercoverimage,
+  getwatchhistory,
+};
