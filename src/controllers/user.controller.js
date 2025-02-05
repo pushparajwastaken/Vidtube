@@ -316,4 +316,133 @@ const updausercoverimage = asynchandler(async (req, res) => {
     .status(200)
     .json(new Apiresponse(200, user, "Avatar Updated Successfully"));
 });
+const getuserchannelprofile = asynchandler(async (req, res) => {
+  const { username } = req.params;
+  if (!username?.trim()) {
+    throw new Apierror(400, "Username is required");
+  }
+  const channel = await User.aggregate([
+    {
+      $match: {
+        username: username?.toLowerCase(),
+      },
+    },
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "_id",
+        foreignField: "channel",
+        as: "subscribers",
+      },
+    },
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "_id",
+        foreignField: "subscriber",
+        as: "subscribedto",
+      },
+    },
+    {
+      $addFields: {
+        subscribercount: {
+          $size: "$subscribers",
+        },
+        channelsubscribedtocount: {
+          $size: "$subscribedto",
+        },
+      },
+    },
+    {
+      $addFields: {
+        subscriberscount: {
+          $size: "$subscribers",
+        },
+        channelsubscribedtocount: {
+          $size: "$subscribedto",
+        },
+        issubscribed: {
+          $cind: {
+            if: { $in: [req.user?._id, "$subscribers.subscriber"] },
+            then: true,
+            else: false,
+          },
+        },
+      },
+    },
+    {
+      //project only the necessary data
+      $project: {
+        fullname: 1,
+        username: 1,
+        avatar: 1,
+        subscriberscount: 1,
+        channelsubscribedtocount: 1,
+        issubscribed: 1,
+        coverimage: 1,
+        email: 1,
+      },
+    },
+  ]);
+  if (!channel?.length) {
+    throw new Apierror(404, "Channel Not Found");
+  }
+  return res
+    .status(200)
+    .json(
+      new Apiresponse(200, channel[0], "Channel Profile Fetched Successfully")
+    );
+});
+const getwatchhistory = asynchandler(async (req, res) => {
+  const user = await User.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(req.user?._id), //we have to give an explicitly designed mongoose id
+      },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "watchhistory",
+        foreignfield: "_id",
+        as: "watchhistory",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                {
+                  $project: {
+                    fullname: 1,
+                    username: 1,
+                    avatar: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $addFields: {
+              owner: {
+                $first: "$owner",
+              },
+            },
+          },
+        ],
+      },
+    },
+  ]);
+  return res
+    .status(200)
+    .json(
+      new Apiresponse(
+        200,
+        user[0]?.watchhistory,
+        "Watch History Fetched Successfully"
+      )
+    );
+});
 export { registeruser, loginuser, refreshaccesstoken, logoutuser };
