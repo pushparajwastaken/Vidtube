@@ -289,7 +289,7 @@ const updateuseravatar = asynchandler(async (req, res) => {
     .status(200)
     .json(new Apiresponse(200, user, "Avatar Updated Successfully"));
 });
-const updausercoverimage = asynchandler(async (req, res) => {
+const updautecoverimage = asynchandler(async (req, res) => {
   const coverimagelocalpath = req.file?.path;
   if (!coverimagelocalpath) {
     throw new Apierror(400, "File is required");
@@ -455,6 +455,6 @@ export {
   getuserchannelprofile,
   updateaccountdetails,
   updateuseravatar,
-  updausercoverimage,
+  updautecoverimage,
   getwatchhistory,
 };

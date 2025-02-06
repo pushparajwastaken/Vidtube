@@ -1,15 +1,22 @@
 import { Router } from "express";
 import { verifyjwt } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
-import { registeruser, logoutuser,loginuser,
+import {
+  registeruser,
+  logoutuser,
+  loginuser,
   refreshaccesstoken,
   changecurrentpassword,
   getcurrentuser,
   getuserchannelprofile,
   updateaccountdetails,
   updateuseravatar,
-  getwatchhistory, } from "../controllers/user.controller.js";
+  getwatchhistory,
+} from "../controllers/user.controller.js";
 const router = Router();
+
+//unsecured routes
+
 router.route("/register").post(
   upload.fields([
     {
