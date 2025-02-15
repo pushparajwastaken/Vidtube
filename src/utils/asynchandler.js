@@ -1,5 +1,5 @@
 //the whole job of this asynchandler is to receive a function
-//so the parameter passedo onto this asynchandler is a function in itself
+//so the parameter passed onto this asynchandler is a function in itself
 
 const asynchandler = (requesthandler) => {
   //we're not executing the function we're wrapping it up and returning it back
