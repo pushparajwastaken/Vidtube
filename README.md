@@ -1,4 +1,4 @@
-(currently the work is in process)
+(currently the work is in process will include live video streaming also)
 # Vidtube
 
 Vidtube is a video-sharing platform that allows users to upload, watch, and manage videos with an intuitive and user-friendly interface.
